@@ -15,7 +15,7 @@ datasource db {
 }
 
 model Profile {
-  id       String @id @default(cuid())
+  id       String @id @default(uuid())
   userId   String @unique
   name     String
   imageUrl String @db.Text
