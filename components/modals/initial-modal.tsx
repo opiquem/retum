@@ -20,8 +20,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { FileUpload } from '@/components/file-upload';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -48,7 +49,7 @@ export const InitialModal: FC = () => {
   if (!isClient) {
     return null;
   }
-  console.log('mounting');
+
   return (
     <Dialog open>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
@@ -65,7 +66,22 @@ export const InitialModal: FC = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
               <div className="flex items-center justify-center text-center">
-                Image upload
+                <FormField
+                  control={form.control}
+                  name='imageUrl'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FileUpload
+                          endpoint="serverImage"
+                          value={field.value}
+                          onChange={(value) => field.onChange(value)}
+                          // {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <FormField
