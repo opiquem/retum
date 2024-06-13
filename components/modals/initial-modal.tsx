@@ -1,4 +1,6 @@
 'use client';
+import { FileUpload } from '@/components/file-upload';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -15,14 +17,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { useIsClient } from '@/lib/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { FileUpload } from '@/components/file-upload';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -31,6 +33,7 @@ const formSchema = z.object({
 
 export const InitialModal: FC = () => {
   const isClient = useIsClient();
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -43,7 +46,15 @@ export const InitialModal: FC = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      await axios.post('/api/servers', values);
+
+      form.reset();
+      router.refresh();
+      // window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (!isClient) {
@@ -68,7 +79,7 @@ export const InitialModal: FC = () => {
               <div className="flex items-center justify-center text-center">
                 <FormField
                   control={form.control}
-                  name='imageUrl'
+                  name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>

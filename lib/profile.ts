@@ -8,7 +8,7 @@ export interface Profile {
   name: string;
   imageUrl: string;
   email: string;
-  servers: Server[];
+  // servers: Server[];
 
   createdAt: Date;
   updatedAt: Date;
@@ -42,3 +42,19 @@ export const getInitialProfile = async () => {
 
   return newProfile;
 };
+
+export const getCurrentProfile = async (): Promise<Profile | null> => {
+  const { userId } = auth();
+
+  if (!userId) {
+    throw new Error('Unauthorized');
+  }
+
+  const profile = await db.profile.findUnique({
+    where: {
+      userId,
+    },
+  });
+
+  return profile;
+}
