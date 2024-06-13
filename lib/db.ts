@@ -16,7 +16,7 @@ export const db = createPrismaClient();
 function createPrismaClient(): PrismaClient {
   if (!globalThis.prismaClient || process.env.NODE_ENV !== 'production') {
     globalThis.prismaClient = new PrismaClient({
-      log: [{ emit: 'stdout', level: 'query' }],
+      // log: [{ emit: 'stdout', level: 'query' }],
     });
   }
 
